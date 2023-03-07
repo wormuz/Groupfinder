@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: GroupFinder
+## DefaultState: Enabled
+## Notes: LFG AddOn
+## LoadOnDemand: 0
+## SavedVariables: GF_SavedVariables, GF_BlackList, GF_MessageList, GF_PlayerMessages, GF_WhoTable, GF_ClassWhoTable
+GroupFinder.xml
+Bindings.xml
