@@ -1,3 +1,5 @@
+GF_CHANNEL_NAME			= "World";
+
 -- Class List
 GF_PRIEST				= "Priest";
 GF_MAGE		    		= "Mage";
@@ -34,7 +36,7 @@ GF_SHOW_TRANSLATE		= "Show Translate";
 GF_SHOW_DUNGEONS		= "Show Dungeons";
 GF_SHOW_RAIDS			= "Show Raids";
 GF_SHOW_QUESTS			= "Show Quests";
-GF_SHOW_PVP				= "Show PvP";
+GF_SHOW_OTHER			= "Show Other";
 GF_SHOW_LFM				= "Show LFM";
 GF_SHOW_LFG				= "Show LFG";
 GF_CLEAR				= "Clear"

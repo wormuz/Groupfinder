@@ -190,7 +190,6 @@ GF_Util.rateResults = function (msg, fLevel)
 	for _,word in GF_TRIGGER_LIST.PVP do
 		if string.find(msgnew, word) then
 			goal_score = 1;
-			gtype = "P"
 			break;
 		end
 	end

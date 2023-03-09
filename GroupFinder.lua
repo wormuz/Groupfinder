@@ -1,5 +1,4 @@
-﻿local GF_ANNOUNCE_CHANNEL_NAME		= "World";
-GF_RELEASEVERSION 				= "R12";
+﻿GF_RELEASEVERSION 				= "R12";
 GF_SavedVariables = {
 	joinworld					= true,
 	lastlogout					= 0,
@@ -28,7 +27,7 @@ GF_SavedVariables = {
 	showdungeons				= true,
 	showraids					= true,
 	showquests					= true,
-	showpvp						= true,
+	showother					= true,
 	showlfm						= true,
 	showlfg						= true,
 	searchtext					= "",
@@ -319,10 +318,10 @@ function GF_OnUpdate()
 				if GF_LFGDescriptionEditBox:GetText() ~= "" and string.len(GF_LFGDescriptionEditBox:GetText()) >= 6 then
 					if GF_SavedVariables.lfgauto and string.sub(GF_LFGDescriptionEditBox:GetText(), 1, 2) == "lf" and string.sub(GF_LFGDescriptionEditBox:GetText(), 1, 3) ~= "lfg" then 
 						local lfgmessage = string.gsub(GF_LFGDescriptionEditBox:GetText(), "%w+%s(.+)", "%1") or ""
-						GF_SendChatMessage("LF"..GF_SavedVariables.lfgsize-GF_GetNumGroupMembers().."M "..lfgmessage, "CHANNEL", GF_ANNOUNCE_CHANNEL_NAME);
+						GF_SendChatMessage("LF"..GF_SavedVariables.lfgsize-GF_GetNumGroupMembers().."M "..lfgmessage, "CHANNEL", GF_CHANNEL_NAME);
 						GF_Println(GF_SENT.."LF"..GF_SavedVariables.lfgsize-GF_GetNumGroupMembers().."M "..lfgmessage);
 					else
-						GF_SendChatMessage(GF_LFGDescriptionEditBox:GetText(), "CHANNEL", GF_ANNOUNCE_CHANNEL_NAME);
+						GF_SendChatMessage(GF_LFGDescriptionEditBox:GetText(), "CHANNEL", GF_CHANNEL_NAME);
 						GF_Println(GF_SENT..GF_LFGDescriptionEditBox:GetText());
 					end
 					PlaySound("TellMessage");
@@ -343,7 +342,7 @@ function GF_OnUpdate()
 			local counter = 0;
 			for n,m in pairs(GF_SendAddonMessageBuffer) do
 				local timedifference = (tonumber(string.sub(GF_GetTime(),1,2))*60 + tonumber(string.sub(GF_GetTime(),3,4))) - (tonumber(string.sub(m.time,1,2))*60 + tonumber(string.sub(m.time,3,4)))
-				if m.who and (m.type == "D" or m.type == "R") and timedifference < 15 then
+				if m.who and not m.translated and (m.type == "D" or m.type == "R") and timedifference < 15 then
 					local t = m.time
 					local c = GF_Classes[m.who.class] or 7
 					local d = m.type
@@ -473,7 +472,7 @@ local function GF_LoadSettings()
 	GF_SearchFrameShowDungeonCheckButton:SetChecked(GF_SavedVariables.showdungeons);
 	GF_SearchFrameShowRaidCheckButton:SetChecked(GF_SavedVariables.showraids);
 	GF_SearchFrameShowQuestCheckButton:SetChecked(GF_SavedVariables.showquests);
-	GF_SearchFrameShowPVPCheckButton:SetChecked(GF_SavedVariables.showpvp);
+	GF_SearchFrameShowOtherCheckButton:SetChecked(GF_SavedVariables.showother);
 	GF_SearchFrameShowLFMCheckButton:SetChecked(GF_SavedVariables.showlfm);
 	GF_SearchFrameShowLFGCheckButton:SetChecked(GF_SavedVariables.showlfg);
 
@@ -525,7 +524,7 @@ function GF_OnEvent(event)
 			local addonsendstring = "U";
 			local counter = 0;
 			for j=1, getn(GF_MessageList) do
-				if GF_MessageList[j].type == "D" or GF_MessageList[j].type == "R" then
+				if not GF_MessageList[j].translated and (GF_MessageList[j].type == "D" or GF_MessageList[j].type == "R") then
 					counter = counter + 1;
 					addonsendstring = addonsendstring..":"..GF_MessageList[j].op
 					if string.len(addonsendstring) > 240 then SendAddonMessage("GF", addonsendstring, "GUILD"); addonsendstring = "U" end
@@ -647,22 +646,22 @@ function GF_JoinWorld(show)
 	GF_WorldFound = nil;
 	for i=1, 10 do
 		local _,cName = GetChannelName(i)
-		if cName and string.lower(cName) == "world" then
+		if cName and string.lower(cName) == string.lower(GF_CHANNEL_NAME) then
 			GF_WorldFound = true;
 			return
 		end
 	end
 	if not GF_WorldFound then
-		JoinChannelByName("World");
+		JoinChannelByName(GF_CHANNEL_NAME);
 		GF_WorldFound = true;
 	end
-	if show then ChatFrame_AddChannel(ChatFrame1, "World") end
+	if show then ChatFrame_AddChannel(ChatFrame1, GF_CHANNEL_NAME) end
 end
 
 function GF_LeaveWorld()
 	for i=1, 10 do
 		local _,cName = GetChannelName(i)
-		if cName and string.lower(cName) == "world" then
+		if cName and string.lower(cName) == string.lower(GF_CHANNEL_NAME) then
 			ChatFrame_RemoveChannel(1, cName);
 			return
 		end
@@ -678,8 +677,9 @@ function GF_SendChatMessage(message, messageType, channel)
 end
 
 function GF_EntryMatchesGroupFilterCriteria(entry, nolevelcheck)
-	if ((GF_SavedVariables.showdungeons and entry.type == "D") or (GF_SavedVariables.showraids and entry.type == "R") or (GF_SavedVariables.showtranslate and entry.type == "T")
-	or (GF_SavedVariables.showquests and entry.type == "Q") or (GF_SavedVariables.showpvp and entry.type == "P") or (entry.type == "N" and not GF_SavedVariables.autofilter))
+	if (GF_SavedVariables.showtranslate or not entry.translated)
+	and ((GF_SavedVariables.showdungeons and entry.type == "D") or (GF_SavedVariables.showraids and entry.type == "R")
+	or (GF_SavedVariables.showquests and entry.type == "Q") or (GF_SavedVariables.showother and entry.type == "N"))
 	and ((GF_SavedVariables.showlfg and string.find(string.lower(entry.message), "lfg"))
 	or (GF_SavedVariables.showlfm and not string.find(string.lower(entry.message), "lfg")))
 	and (nolevelcheck or (not GF_SavedVariables.autofilter or (entry.who and entry.who.level and entry.who.level ~= 0
@@ -701,7 +701,7 @@ function GF_ApplyFiltersToGroupList()
 				or (GF_SavedVariables.searchtext == "" and GF_EntryMatchesGroupFilterCriteria(data) and (GF_SavedVariables.searchbuttonstext == "" or GF_Util.search(data.message, GF_SavedVariables.searchbuttonstext) > 0)) then
 					data.elapsed = timedifference;
 					table.insert(GF_FilteredResultsList, data);
-				elseif data.type ~= "N" and data.type ~= "D" and data.type ~= "R" and data.type ~= "Q" and data.type ~= "P" and data.type ~= "T" then
+				elseif data.type ~= "N" and data.type ~= "D" and data.type ~= "R" and data.type ~= "Q" then
 					table.remove(GF_MessageList , i);
 					i = i - 1;
 				end
@@ -1102,8 +1102,8 @@ function GF_ShowTooltip() -- Generic Tooltip. Called by XML
 	end
 end
 		
-function GF_Println(s)
-	if s and DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("GF: "..m, 1, 1, 0.5); end		
+function GF_Println(m)
+	if m and DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("GF: "..m, 1, 1, 0.5); end		
 end
 
 function GF_ToggleAnnounce()
@@ -1409,7 +1409,8 @@ function GF_CheckForGroups(arg1, arg2, arg8, untranslated)
 	end
 	entry.who = GFAWM.toOldFormat(arg2) or whoData;
 	entry.op = arg2;
-	if GF_TranslatedMessage then entry.type = "T"; else entry.type = gtype; end
+	entry.type = gtype;
+	entry.translated = GF_TranslatedMessage;
 	entry.ilevel = glevel;
 	entry.channel = arg8;
 	return score, entry

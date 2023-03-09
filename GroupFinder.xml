@@ -1410,7 +1410,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 									</OnLoad>
 								</Scripts>							
 							</CheckButton>
-							<CheckButton name="GF_SearchFrameShowPVPCheckButton" inherits="GF_AbstractLabelCheckButton">
+							<CheckButton name="GF_SearchFrameShowOtherCheckButton" inherits="GF_AbstractLabelCheckButton">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="GF_SearchFrameShowRaidCheckButton" >
 										<Offset>
@@ -1420,7 +1420,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 								</Anchors>
 								<Scripts>
 									<OnClick>								
-										GF_SavedVariables.showpvp = this:GetChecked();
+										GF_SavedVariables.showother = this:GetChecked();
 										GF_ApplyFiltersToGroupList();
 									</OnClick>
 									<OnEnter>
@@ -1431,8 +1431,8 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 									</OnLeave>
 									<OnLoad>
 										getglobal(this:GetName().."TextLabel"):SetWidth(100);
-										getglobal(this:GetName().."TextLabel"):SetText(GF_SHOW_PVP);
-										getglobal(this:GetName().."TextLabel"):SetPoint("TOPLEFT", "GF_SearchFrameShowPVPCheckButton", "TOPLEFT", 24, 2);
+										getglobal(this:GetName().."TextLabel"):SetText(GF_SHOW_OTHER);
+										getglobal(this:GetName().."TextLabel"):SetPoint("TOPLEFT", "GF_SearchFrameShowOtherCheckButton", "TOPLEFT", 24, 2);
 									</OnLoad>
 								</Scripts>							
 							</CheckButton>
@@ -1464,7 +1464,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 							</CheckButton>
 							<CheckButton name="GF_SearchFrameShowLFGCheckButton" inherits="GF_AbstractLabelCheckButton">
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="GF_SearchFrameShowPVPCheckButton" >
+									<Anchor point="TOPLEFT" relativeTo="GF_SearchFrameShowOtherCheckButton" >
 										<Offset>
 											<AbsDimension x="85" y="0"/>
 										</Offset>
