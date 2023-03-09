@@ -5,6 +5,7 @@ GF_SavedVariables = {
 	lastlogout					= 0,
 	disablechatfiltering		= false;
 	translate					= true;
+	showoriginal				= false;
 	automatictranslate			= false;
 	blockpolitics				= false;
 	blockmessagebelowlevel		= 1;
@@ -111,7 +112,7 @@ function GF_OnLoad()
 	local old_ChatFrame_OnEvent = ChatFrame_OnEvent;
 	function ChatFrame_OnEvent(event)
 		if not arg1 or arg1 == GF_SentMessage or not arg2 or arg2 == "" or arg2 == UnitName("player") or not arg9 then
-			if arg1 and arg1 ~= "" and arg1 == GF_SentMessage and string.find(arg1, "([\227\228\229\230\231\232\233\234\235\236\237])") then
+			if GF_SavedVariables.showoriginal and arg1 and arg1 ~= "" and arg1 == GF_SentMessage and string.find(arg1, "([\227\228\229\230\231\232\233\234\235\236\237])") then
 				SELECTED_CHAT_FRAME:AddMessage("Translated text: "..GF_TranslateMessage(arg1), 1, 1, 1)
 			end 
 			GF_SentMessage = nil;
@@ -472,6 +473,8 @@ local function GF_LoadSettings()
 	GF_FrameJoinWorldCheckButton:SetChecked(GF_SavedVariables.joinworld);
 	GF_FrameDisableChatFilteringCheckButton:SetChecked(GF_SavedVariables.disablechatfiltering);
 	GF_FrameAutomaticTranslateCheckButton:SetChecked(GF_SavedVariables.automatictranslate);
+	GF_FrameShowOriginalTextCheckButton:SetChecked(GF_SavedVariables.showoriginal);
+	
 	GF_FrameErrorFilterCheckButton:SetChecked(GF_SavedVariables.errorfilter);
 	GF_FrameBlockPoliticsCheckButton:SetChecked(GF_SavedVariables.blockpolitics);
 	GF_FrameSpamFilterCheckButton:SetChecked(GF_SavedVariables.spamfilter);
@@ -484,7 +487,6 @@ local function GF_LoadSettings()
 	GF_GroupListingDurationSlider:SetValue((GF_SavedVariables.grouplistingduration or 15));
 	GF_AutoFilterLevelSlider:SetValue((GF_SavedVariables.autofilterlevelvar or 6));
 	GF_GroupNewTimeoutSlider:SetValue((GF_SavedVariables.showgroupsnewonlytime or 3));
-
 
 	GF_LFGAutoCheckButton:SetChecked(GF_SavedVariables.lfgauto);
 	getglobal(GF_SearchFrameDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchtext or "");

@@ -2936,28 +2936,9 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 											</OnLoad>
 										</Scripts>							
 									</CheckButton>
-									<CheckButton name="GF_FrameBlockPoliticsCheckButton" inherits="GF_AbstractLabelCheckButton">
-										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="GF_FrameErrorFilterCheckButton">
-												<Offset>
-													<AbsDimension x="0" y="-32"/>
-												</Offset>
-											</Anchor>
-										</Anchors>
-										<Scripts>
-											<OnClick>								
-												GF_SavedVariables.blockpolitics = this:GetChecked();
-											</OnClick>
-											<OnLoad>
-												getglobal(this:GetName().."TextLabel"):SetWidth(300);
-												getglobal(this:GetName().."TextLabel"):SetText(GF_BLOCK_POLITICS);
-												getglobal(this:GetName().."TextLabel"):SetPoint("TOPLEFT", "GF_FrameBlockPoliticsCheckButton", "TOPLEFT", 24, 2);
-											</OnLoad>
-										</Scripts>							
-									</CheckButton>
 									<CheckButton name="GF_FrameAutomaticTranslateCheckButton" inherits="GF_AbstractLabelCheckButton">
 										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="GF_FrameBlockPoliticsCheckButton">
+											<Anchor point="TOPLEFT" relativeTo="GF_FrameErrorFilterCheckButton">
 												<Offset>
 													<AbsDimension x="0" y="-32"/>
 												</Offset>
@@ -2971,6 +2952,25 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 												getglobal(this:GetName().."TextLabel"):SetWidth(300);
 												getglobal(this:GetName().."TextLabel"):SetText(GF_AUTOMATIC_TRANSLATE);
 												getglobal(this:GetName().."TextLabel"):SetPoint("TOPLEFT", "GF_FrameAutomaticTranslateCheckButton", "TOPLEFT", 24, 2);
+											</OnLoad>
+										</Scripts>							
+									</CheckButton>
+									<CheckButton name="GF_FrameShowOriginalTextCheckButton" inherits="GF_AbstractLabelCheckButton">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="GF_FrameAutomaticTranslateCheckButton">
+												<Offset>
+													<AbsDimension x="0" y="-32"/>
+												</Offset>
+											</Anchor>
+										</Anchors>
+										<Scripts>
+											<OnClick>								
+												GF_SavedVariables.showoriginal = this:GetChecked();
+											</OnClick>
+											<OnLoad>
+												getglobal(this:GetName().."TextLabel"):SetWidth(300);
+												getglobal(this:GetName().."TextLabel"):SetText(GF_SHOW_ORIGINAL);
+												getglobal(this:GetName().."TextLabel"):SetPoint("TOPLEFT", "GF_FrameShowOriginalTextCheckButton", "TOPLEFT", 24, 2);
 											</OnLoad>
 										</Scripts>							
 									</CheckButton>
@@ -3009,6 +3009,25 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 												getglobal(this:GetName().."TextLabel"):SetWidth(300);
 												getglobal(this:GetName().."TextLabel"):SetText(GF_AUTO_BLACKLIST);
 												getglobal(this:GetName().."TextLabel"):SetPoint("TOPLEFT", "GF_FrameAutoBlacklistCheckButton", "TOPLEFT", 24, 2);
+											</OnLoad>
+										</Scripts>							
+									</CheckButton>
+									<CheckButton name="GF_FrameBlockPoliticsCheckButton" inherits="GF_AbstractLabelCheckButton">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="GF_FrameAutoBlacklistCheckButton">
+												<Offset>
+													<AbsDimension x="0" y="-32"/>
+												</Offset>
+											</Anchor>
+										</Anchors>
+										<Scripts>
+											<OnClick>								
+												GF_SavedVariables.blockpolitics = this:GetChecked();
+											</OnClick>
+											<OnLoad>
+												getglobal(this:GetName().."TextLabel"):SetWidth(300);
+												getglobal(this:GetName().."TextLabel"):SetText(GF_BLOCK_POLITICS);
+												getglobal(this:GetName().."TextLabel"):SetPoint("TOPLEFT", "GF_FrameBlockPoliticsCheckButton", "TOPLEFT", 24, 2);
 											</OnLoad>
 										</Scripts>							
 									</CheckButton>
