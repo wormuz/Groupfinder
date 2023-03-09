@@ -10,7 +10,7 @@ GF_SavedVariables = {
 	blockmessagebelowlevel		= 1;
 	grouplistingduration		= 15,
 	showgroupsinchat			= true,
-	showgroupsinminimap			= true,
+	showgroupsinminimap			= false,
 	showgroupsnewonly			= false,
 	showgroupsnewonlytime		= 3,
 	showchattexts				= true,
@@ -194,7 +194,12 @@ function GF_OnLoad()
 							if string.find(arg1,GF_PlayerMessages[arg2][1],1,true) or string.find(arg1,GF_PlayerMessages[arg2][2],1,true) then
 								if GF_SavedVariables.autoblacklist and not GF_BlackList[arg2] and tempwhodata
 								and tonumber(tempwhodata.level) <= GF_SavedVariables.autoblacklistminlevel and string.len(arg1) > 120 then 
-									GF_BlackList[arg2] = string.sub(arg1,1,80);
+									if tempwhodata.recordedTime + 60*60*6 < time() then
+										GF_WhoTable[arg2] = nil;
+										GFAWM.addNameToWhoQueue(arg2)
+									else
+										GF_BlackList[arg2] = string.sub(arg1,1,80);
+									end
 								end
 								GF_Log:AddMessage("["..GF_GetTime(true).."] "..GF_BLOCKED_SPAM..arg2..": "..string.sub(arg1,1,80), 1.0, 1.0, 0.5);
 								GF_PreviousMessage[arg2][3] = true;
@@ -782,14 +787,14 @@ function GF_GetWhoData(arg2)
 	end
 	if whodata then
 		if not GF_WhoTable[arg2] then
-			if whodata.level <= GF_SavedVariables.autoblacklistminlevel then
+			if whodata.level <= GF_SavedVariables.autoblacklistminlevel  then
 				GFAWM.addNameToWhoQueue(arg2)
 				return
 			else
 				GF_WhoTable[arg2] = { time(), whodata.level, whodata.class, whodata.guild };
 			end
 		end
-		if whodata.recordedTime + 259200 < time() then GFAWM.addNameToWhoQueue(arg2) end
+		if whodata.recordedTime + 259200 < time() then GF_WhoTable[arg2] = nil; GFAWM.addNameToWhoQueue(arg2) end
 	else
 		GFAWM.addNameToWhoQueue(arg2)
 	end
