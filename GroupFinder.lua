@@ -279,12 +279,19 @@ function GF_OnLoad()
 	local old_SendChatMessage = SendChatMessage;
 	function SendChatMessage(arg1, arg2, arg3, arg4)
 		local channelname;
+		local istesting = string.find(string.sub(arg1,1,6), "testt ");
 		if arg4 then _,channelname = GetChannelName(arg4) end
-		if (GF_SavedVariables.automatictranslate and channelname and string.lower(channelname) == "china") or string.lower(string.sub(arg1,1,2)) == "t " then
+		if (GF_SavedVariables.automatictranslate and channelname and string.lower(channelname) == "china") or string.lower(string.sub(arg1,1,2)) == "t " or istesting then
 			arg1 = GF_TranslateSentMessage(arg1)
 		end
 		GF_SentMessage = arg1;
-		old_SendChatMessage(arg1, arg2, arg3, arg4)
+		if not istesting then
+			old_SendChatMessage(arg1, arg2, arg3, arg4)
+		else
+			arg1 = string.sub(arg1,7)
+			SELECTED_CHAT_FRAME:AddMessage("Translated text: "..arg1, 1, 1, 1)
+			SELECTED_CHAT_FRAME:AddMessage("Post-translated text: "..GF_TranslateMessage(arg1), 1, 1, 1)
+		end
 	end
 	local old_AddIgnore = AddIgnore;
 	function AddIgnore(name)
@@ -1673,7 +1680,7 @@ function GF_TranslateSentMessage(arg1)
 	table.sort(translatedsnips, function(a,b) return a[2] < b[2] end)
 	arg1 = ""
 	for i=1, getn(translatedsnips) do
-		if arg1 ~= "" and string.sub(arg1, string.len(arg1)) ~= " " then arg1 = arg1.." " end
+		--if arg1 ~= "" and string.sub(arg1, string.len(arg1)) ~= " " then arg1 = arg1.." " end
 		arg1 = arg1..translatedsnips[i][1]
 	end
 	arg1 = string.gsub(arg1,"( +)", " ")
