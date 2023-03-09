@@ -111,6 +111,9 @@ function GF_OnLoad()
 	local old_ChatFrame_OnEvent = ChatFrame_OnEvent;
 	function ChatFrame_OnEvent(event)
 		if not arg1 or arg1 == GF_SentMessage or not arg2 or arg2 == "" or arg2 == UnitName("player") or not arg9 then
+			if arg1 and arg1 ~= "" and arg1 == GF_SentMessage and string.find(arg1, "([\227\228\229\230\231\232\233\234\235\236\237])") then
+				SELECTED_CHAT_FRAME:AddMessage("Translated text: "..GF_TranslateMessage(arg1), 1, 1, 1)
+			end 
 			GF_SentMessage = nil;
 			if GF_SavedVariables.errorfilter and arg1 then 
 				for i=1, getn(GF_ErrorFilters) do
@@ -180,7 +183,7 @@ function GF_OnLoad()
 						if not GF_PlayerMessages[arg2] then
 							GF_PlayerMessages[arg2] = { [1] = string.sub(arg1,math.floor(sniprandom/4),math.floor(sniprandom/4) + 50), [2] = "ZXYXZ123" }
 						elseif GF_PlayerMessages[arg2].time then
-							if GF_PlayerMessages[arg2].time > GF_SavedVariables.spamfilterduration*60 and (string.find(arg1,GF_PlayerMessages[arg2][1],1,true) or string.find(arg1,GF_PlayerMessages[arg2][2],1,true)) then
+							if GF_PlayerMessages[arg2].time > time() and (string.find(arg1,GF_PlayerMessages[arg2][1],1,true) or string.find(arg1,GF_PlayerMessages[arg2][2],1,true)) then
 								GF_Log:AddMessage("["..GF_GetTime(true).."] "..GF_BLOCKED_SPAM..arg2..": "..string.sub(arg1,1,80), 1.0, 1.0, 0.5);
 								GF_PreviousMessage[arg2][3] = true;
 								return;
@@ -191,7 +194,7 @@ function GF_OnLoad()
 							if string.find(arg1,GF_PlayerMessages[arg2][1],1,true) or string.find(arg1,GF_PlayerMessages[arg2][2],1,true) then
 								if GF_SavedVariables.autoblacklist and not GF_BlackList[arg2] and tempwhodata
 								and tonumber(tempwhodata.level) <= GF_SavedVariables.autoblacklistminlevel and string.len(arg1) > 120 then 
-									GF_BlackList[arg2] = string.sub(arg1,1,50);
+									GF_BlackList[arg2] = string.sub(arg1,1,80);
 								end
 								GF_Log:AddMessage("["..GF_GetTime(true).."] "..GF_BLOCKED_SPAM..arg2..": "..string.sub(arg1,1,80), 1.0, 1.0, 0.5);
 								GF_PreviousMessage[arg2][3] = true;
@@ -274,156 +277,12 @@ function GF_OnLoad()
 	end
 	local old_SendChatMessage = SendChatMessage;
 	function SendChatMessage(arg1, arg2, arg3, arg4)
-		--[[local channelname;
+		local channelname;
 		if arg4 then _,channelname = GetChannelName(arg4) end
 		if (GF_SavedVariables.automatictranslate and channelname and string.lower(channelname) == "china") or string.lower(string.sub(arg1,1,2)) == "t " then
-			if string.sub(arg1,1,2) == "t " then arg1 = string.sub(arg1,3) end
-			arg1 = " "..arg1
-			local untranslatedsnips = {}
-			local translatedsnips = {}
-			local st,et,su,se
-			local r = true;
-			local startingposition = 1;
-			untranslatedsnips = { [1] = { arg1, 1 } }
-			for itemcolor, itemclass, itemid,itemenchant in string.gfind(arg1, "|c(.-)|H([a-tA-T]*):(%d+)(.-)%|h%[(.-)%]|h|r") do
-				if not itemid then break end
-				local name = GetItemInfo(itemid);
-				if name then
-					st,et = string.find(arg1, "|c(.-)|H[a-tA-T]*:(%d+)(.-)%|h%[(.-)%]|h|r", startingposition)
-					for i=1, getn(untranslatedsnips) do
-						su,eu = string.find(untranslatedsnips[i][1], "|c(.-)|H[a-tA-T]*:(%d+)(.-)%|h%[(.-)%]|h|r")
-						if st and su then
-							table.insert(translatedsnips, { "|c"..itemcolor.."|H"..itemclass..":"..itemid..itemenchant.."|h["..name.."]|h|r", st})
-							table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1})
-							untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1}
-							break
-						end
-					end
-					startingposition = et+1
-				end
-			end
-			for i=1, getn(untranslatedsnips) do
-				untranslatedsnips[i][1] = string.lower(untranslatedsnips[i][1])
-			end
-			startingposition = 1;
-			local num;
-			while r do
-				st,et,num = string.find(arg1,"lf(%d+)m",startingposition)
-				for i=1, getn(untranslatedsnips) do
-					if untranslatedsnips[i] ~= "" then
-						su,eu = string.find(untranslatedsnips[i][1],"lf(%d+)m",1)
-						if st and su then
-							if tonumber(num) > 0 then 
-								table.insert(translatedsnips, { "="..num, st})
-								table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1})
-								untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1}
-							end
-							break
-						end
-					else
-						table.remove(translatedsnips, i)
-						su = nil
-					end
-				end
-				if not st or not su then r = nil break else startingposition = et+1 end
-			end
-
-			counter = getn(GF_Translate) - 1
-			while counter > 1 do
-				for k,v in pairs(GF_Translate[counter]) do
-					startingposition = 1;
-					r = true;
-					while r do
-						for j=1, getn(v) do
-							st,et = string.find(arg1,v[j],startingposition,true)
-							for i=1, getn(untranslatedsnips) do
-								if untranslatedsnips[i] ~= "" then
-									su,eu = string.find(untranslatedsnips[i][1],v[j],1,true)
-									if st and su then
-										table.insert(translatedsnips, { k, st})
-										table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1})
-										untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1}
-										break
-									end
-								else
-									table.remove(translatedsnips, i)
-									su = nil
-								end
-							end
-						end
-						if not st or not su then r = nil break else startingposition = et+1 end
-					end
-				end
-				counter = counter - 1
-			end
-			local word2, r2, startingposition2;
-			for k,v in pairs(GF_Translate[1]) do
-				startingposition = 1;
-				r = true;
-				while r do
-					st,et,word = string.find(arg1,"(%w+)",startingposition)
-					for j=1, getn(v) do
-						if st and word == v[j] then
-							for i=1, getn(untranslatedsnips) do
-								if untranslatedsnips[i] ~= "" then
-									startingposition2 = 1
-									r2 = true;
-									while r2 do
-										su,eu,word2 = string.find(untranslatedsnips[i][1],"(%w+)",startingposition2)
-										if su and word2 == word then
-											table.insert(translatedsnips, { k, st})
-											table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1})
-											untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1}
-											break
-										end
-										if not su then r2 = nil break else startingposition2 = eu+1 end
-									end
-								else
-									table.remove(translatedsnips, i)
-									su = nil
-								end
-							end
-						end
-					end
-					if not st then r = nil break else startingposition = et+1 end
-				end
-			end
-			local maxtableposition = getn(GF_Translate)
-			for i=1, getn(GF_Translate[maxtableposition]) do
-				for k,v in pairs(GF_Translate[maxtableposition][i]) do
-					startingposition = 1;
-					r = true;
-					while r do
-						for j=1, getn(v) do
-							st,et = string.find(arg1,v[j],startingposition,true)
-							for i=1, getn(untranslatedsnips) do
-								su,eu = string.find(untranslatedsnips[i][1],v[j],1,true)
-								if st and su then
-									table.insert(translatedsnips, { k, st})
-									table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1})
-									untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1}
-									break
-								end
-							end
-						end
-						if not st or not su then r = nil break else startingposition = et+1 end
-					end
-				end
-			end
-			for i=1, getn(untranslatedsnips) do
-				if untranslatedsnips[i][1] ~= "" then 
-					table.insert(translatedsnips, untranslatedsnips[i])
-				end
-			end
-			table.sort(translatedsnips, function(a,b) return a[2] < b[2] end)
-			arg1 = ""
-			for i=1, getn(translatedsnips) do
-				if string.sub(arg1, string.len(arg1),string.len(arg1)) ~= " " then arg1 = arg1.." " end
-				arg1 = arg1..translatedsnips[i][1]
-			end
-			return
+			arg1 = GF_TranslateSentMessage(arg1)
 		end
-		GF_SentMessage = arg1;--]]
+		GF_SentMessage = arg1;
 		old_SendChatMessage(arg1, arg2, arg3, arg4)
 	end
 	local old_AddIgnore = AddIgnore;
@@ -901,6 +760,7 @@ function GF_UpdateResults()
 end
 
 function GF_GetWhoData(arg2)
+	if string.find(arg2," ") then return end
 	local whodata = GFAWM.toOldFormat(arg2)
 	if not whodata and IsAddOnLoaded("InventoryOnPar") then whodata = IOP.Data[GetRealmName()][arg2] end
 	if not whodata and IsAddOnLoaded("pfUI") then
@@ -912,7 +772,14 @@ function GF_GetWhoData(arg2)
 		end 
 	end
 	if whodata then
-		if not GF_WhoTable[arg2] then GF_WhoTable[arg2] = { time(), whodata.level, whodata.class, whodata.guild }; end
+		if not GF_WhoTable[arg2] then
+			if whodata.level <= GF_SavedVariables.autoblacklistminlevel then
+				GFAWM.addNameToWhoQueue(arg2)
+				return
+			else
+				GF_WhoTable[arg2] = { time(), whodata.level, whodata.class, whodata.guild };
+			end
+		end
 		if whodata.recordedTime + 259200 < time() then GFAWM.addNameToWhoQueue(arg2) end
 	else
 		GFAWM.addNameToWhoQueue(arg2)
@@ -921,10 +788,11 @@ function GF_GetWhoData(arg2)
 end
 
 function GF_AddMessage(arg1, arg2, arg8, arg9, whodata)
+	arg9 = string.gsub(arg9, " - .*", "")
 	for i=1,NUM_CHAT_WINDOWS do
 		local channellist = { GetChatWindowChannels(i) };
 		for j=1, getn(channellist) do
-			if channellist[j] == arg9 then
+			if string.find(arg9,channellist[j]) then
 				getglobal("ChatFrame"..i):AddMessage("["..arg8..". "..string.upper(string.sub(arg9,1,1))..string.lower(string.sub(arg9,2)).."] ".."|cff"..(GF_ClassColors[whodata.class] or "ffffff").."[|Hplayer:"..arg2.."|h"..arg2..", "..whodata.level.."|h|r]: "..arg1, 1, 192/255, 192/255) 
 			end
 			j=j+1
@@ -1557,26 +1425,23 @@ function GF_TranslateMessage(arg1)
 		for i=1, getn(untranslatedsnips) do
 			su,eu = string.find(untranslatedsnips[i][1], "|c.-|H[a-tA-T]*:.-|h%[.-%]|h|r")
 			if st and su then
-				local _,_,itemid = string.find(linkstring, "(%d+)[:%d]+")
+				local _,_,itemid = string.find(linkstring, "(%d+)(:[:%d]+)")
 				local name;
-				if itemid then
-					name = GetItemInfo(itemid);
-					if not name then 
-						table.insert(translatedsnips, { "|c"..linkcolor.."|H"..linktype..":"..linkstring.."|h[", st})
-						table.insert(translatedsnips, { "]|h|r", et})
-						table.insert(untranslatedsnips, { linkname, et-string.len(linkname)-4, string.len(linkname)})
-						table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1, string.len(string.sub(untranslatedsnips[i][1], eu+1))})
-						untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1, string.len(string.sub(untranslatedsnips[i][1], 1, su-1))}
-						local replaceitemlinkwithchars = ""
-						for j=st, et-string.len(linkname)-5 do
-							replaceitemlinkwithchars = replaceitemlinkwithchars.."="
-						end
-						arg1 = string.sub(arg1, 1, st-1)..replaceitemlinkwithchars..linkname.."====="..string.sub(arg1, et+1)
-						break
+				if itemid then name = GetItemInfo(itemid); end
+				if (not name and linktype == "item") or linktype == "enchant" then
+					table.insert(translatedsnips, { "|c"..linkcolor.."|H"..linktype..":"..linkstring.."|h[", st})
+					table.insert(translatedsnips, { "]|h|r", et})
+					table.insert(untranslatedsnips, { linkname, et-string.len(linkname)-4, string.len(linkname)})
+					table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1, string.len(string.sub(untranslatedsnips[i][1], eu+1))})
+					untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1, string.len(string.sub(untranslatedsnips[i][1], 1, su-1))}
+					local replaceitemlinkwithchars = ""
+					for j=st, et-string.len(linkname)-5 do
+						replaceitemlinkwithchars = replaceitemlinkwithchars.."="
 					end
-				else
-					name = linkname;
+					arg1 = string.sub(arg1, 1, st-1)..replaceitemlinkwithchars..linkname.."====="..string.sub(arg1, et+1)
+					break
 				end
+				if not name then name = linkname; end
 				table.insert(translatedsnips, { "|c"..linkcolor.."|H"..linktype..":"..linkstring.."|h["..name.."]|h|r", st})
 				table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1, string.len(string.sub(untranslatedsnips[i][1], eu+1))})
 				untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1, string.len(string.sub(untranslatedsnips[i][1], 1, su-1))}
@@ -1690,33 +1555,6 @@ function GF_TranslateMessage(arg1)
 		end
 		if not st or not su then break else startingposition = et+1 end
 	end
-	-- This was my original method that used string.find to convert the sentences. Keeping this in case it I need it for reverse conversion or for something else
-	--[[counter = getn(GF_Translate) - 1
-	while counter > 0 do
-		for k,v in pairs(GF_Translate[counter]) do
-			startingposition = 1;
-			r = true;
-			while r do
-				st,et = string.find(arg1,k,startingposition,true)
-				for i=1, getn(untranslatedsnips) do
-					if untranslatedsnips[i] ~= "" then
-						su,eu = string.find(untranslatedsnips[i][1],k,1,true)
-						if st and su then
-							table.insert(translatedsnips, { v[1], st})
-							table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1})
-							untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1}
-							break
-						end
-					else
-						table.remove(translatedsnips, i)
-						su = nil
-					end
-				end
-				if not st or not su then r = nil break else startingposition = et+1 end
-			end
-		end
-		counter = counter - 1
-	end--]]
 -- Place the remaining untranslated snips into the translated database
 	for i=1, getn(untranslatedsnips) do
 		if untranslatedsnips[i][1] ~= "" then 
@@ -1728,6 +1566,112 @@ function GF_TranslateMessage(arg1)
 	arg1 = ""
 	for i=1, getn(translatedsnips) do
 		if arg1 ~= "" and not string.find(translatedsnips[i][1],"^[ ,=%+]") then arg1 = arg1.." " end
+		arg1 = arg1..translatedsnips[i][1]
+	end
+	arg1 = string.gsub(arg1,"( +)", " ")
+	return arg1
+end
+
+function GF_TranslateSentMessage(arg1)
+	if string.sub(arg1,1,2) == "t " then arg1 = string.sub(arg1,3) end
+	local untranslatedsnips = {}
+	local translatedsnips = {}
+	local st,et,su,se
+-- Remove punctuation characters
+	local checkchars = { {"(')", ""}, }
+	for i=1, getn(checkchars) do
+		arg1 = string.gsub(arg1, checkchars[i][1], checkchars[i][2])
+	end
+-- Translate all links
+	local startingposition = 1;
+	untranslatedsnips = { [1] = { arg1, 1, string.len(arg1) } }
+	for linkcolor, linktype, linkstring, linkname in string.gfind(arg1, "|c(.-)|H([a-tA-T]*):(.-)|h%[(.-)%]|h|r") do
+		st,et = string.find(arg1, "|c.-|H[a-tA-T]*:.-|h%[.-%]|h|r", startingposition)
+		for i=1, getn(untranslatedsnips) do
+			su,eu = string.find(untranslatedsnips[i][1], "|c.-|H[a-tA-T]*:.-|h%[.-%]|h|r")
+			if st and su then
+				--[[if linktype == "item" or linktype == "enchant" then
+					table.insert(translatedsnips, { "|c"..linkcolor.."|H"..linktype..":"..linkstring.."|h[", st})
+					table.insert(translatedsnips, { "]|h|r", et})
+					table.insert(untranslatedsnips, { linkname, et-string.len(linkname)-4, string.len(linkname)})
+					table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1, string.len(string.sub(untranslatedsnips[i][1], eu+1))})
+					untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1, string.len(string.sub(untranslatedsnips[i][1], 1, su-1))}
+					local replaceitemlinkwithchars = ""
+					for j=st, et-string.len(linkname)-5 do
+						replaceitemlinkwithchars = replaceitemlinkwithchars.."="
+					end
+					arg1 = string.sub(arg1, 1, st-1)..replaceitemlinkwithchars..linkname.."====="..string.sub(arg1, et+1)
+					break
+				end--]]
+				table.insert(translatedsnips, { "|c"..linkcolor.."|H"..linktype..":"..linkstring.."|h["..linkname.."]|h|r", st})
+				table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1, string.len(string.sub(untranslatedsnips[i][1], eu+1))})
+				untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1, string.len(string.sub(untranslatedsnips[i][1], 1, su-1))}
+				local replaceitemlinkwithchars = ""
+				for j=st,et do
+					replaceitemlinkwithchars = replaceitemlinkwithchars.."="
+				end
+				arg1 = string.sub(arg1, 1, st-1)..replaceitemlinkwithchars..string.sub(arg1, et+1)
+				break
+			end
+			startingposition = et+1
+		end
+	end
+-- Convert everything to lowercase
+	for i=1, getn(untranslatedsnips) do
+		untranslatedsnips[i][1] = string.lower(untranslatedsnips[i][1])
+	end
+	arg1 = string.lower(arg1)
+-- Translate from LF??M to =??
+	startingposition = 1;
+	local w;
+	while true do
+		st,et,w = string.find(arg1,"lf(%d+)m",startingposition)
+		for i=1, getn(untranslatedsnips) do
+			su,eu = string.find(untranslatedsnips[i][1],"lf(%d+)m",1)
+			if st and su then
+				if tonumber(w) > 0 then
+					table.insert(translatedsnips, { "="..num, st})
+					table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1,string.len(string.sub(untranslatedsnips[i][1], eu+1))})
+					untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1,string.len(string.sub(untranslatedsnips[i][1], 1, su-1))}
+				end
+				break
+			end
+		end
+		if not st or not su then break else startingposition = et+1 end
+	end
+-- Translate to Chinese
+	local counter;
+	counter = getn(GF_Translate)
+	while counter > 0 do
+		for k,v in pairs(GF_Translate[counter]) do
+			for j=1, getn(v) do
+				startingposition = 1;
+				while true do
+					st,et = string.find(arg1,v[j],startingposition,true)
+					for i=1, getn(untranslatedsnips) do
+						su,eu = string.find(untranslatedsnips[i][1],v[j],1,true)
+						if st and su and not string.find(string.sub(arg1,st-1,st-1),"[a-z]") and not string.find(string.sub(arg1,et+1,et+1),"[a-z]") then
+							table.insert(translatedsnips, { k, st})
+							table.insert(untranslatedsnips, { string.sub(untranslatedsnips[i][1], eu+1), et+1,string.len(string.sub(untranslatedsnips[i][1], eu+1))})
+							untranslatedsnips[i] = { string.sub(untranslatedsnips[i][1], 1, su-1), st-1,string.len(string.sub(untranslatedsnips[i][1], 1, su-1))}
+							break
+						end
+					end
+					if not st then break else startingposition = et+1 end
+				end
+			end
+		end
+		counter = counter - 1
+	end
+	for i=1, getn(untranslatedsnips) do
+		if untranslatedsnips[i][1] ~= "" then 
+			table.insert(translatedsnips, untranslatedsnips[i])
+		end
+	end
+	table.sort(translatedsnips, function(a,b) return a[2] < b[2] end)
+	arg1 = ""
+	for i=1, getn(translatedsnips) do
+		if arg1 ~= "" and string.sub(arg1, string.len(arg1)) ~= " " then arg1 = arg1.." " end
 		arg1 = arg1..translatedsnips[i][1]
 	end
 	arg1 = string.gsub(arg1,"( +)", " ")
