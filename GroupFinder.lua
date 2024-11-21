@@ -99,13 +99,13 @@ function GF_OnLoad()
 	SLASH_GroupFinderCOMMAND1 = "/gf";
 	
 	this:RegisterEvent("CHAT_MSG_SYSTEM"); --Register Event Listeners
-	this:RegisterEvent("CHAT_MSG_ADDON");
-	this:RegisterEvent("PARTY_LEADER_CHANGED");
-	this:RegisterEvent("PARTY_MEMBERS_CHANGED");
+	--this:RegisterEvent("CHAT_MSG_ADDON");
+	--this:RegisterEvent("PARTY_LEADER_CHANGED");
+	--this:RegisterEvent("PARTY_MEMBERS_CHANGED");
 	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("RAID_ROSTER_UPDATE");
-	this:RegisterEvent("WHO_LIST_UPDATE");
-	this:RegisterEvent("ZONE_CHANGED");
+	--this:RegisterEvent("RAID_ROSTER_UPDATE");
+	--this:RegisterEvent("WHO_LIST_UPDATE");
+	--this:RegisterEvent("ZONE_CHANGED");
 	this:RegisterEvent("PLAYER_LEAVING_WORLD");
 	
 	local old_ChatFrame_OnEvent = ChatFrame_OnEvent;
@@ -280,30 +280,30 @@ function GF_OnLoad()
 		end
 		old_ChatFrame_OnEvent(event);
 	end
-	local old_SendChatMessage = SendChatMessage;
-	function SendChatMessage(arg1, arg2, arg3, arg4)
-		local channelname;
-		local istesting = string.find(string.sub(arg1,1,6), "testt ");
-		if arg4 then _,channelname = GetChannelName(arg4) end
-		if (GF_SavedVariables.automatictranslate and channelname and string.lower(channelname) == "china") or string.lower(string.sub(arg1,1,2)) == "t " or istesting then
-			arg1 = GF_TranslateSentMessage(arg1)
-		end
-		GF_SentMessage = arg1;
-		if not istesting then
-			old_SendChatMessage(arg1, arg2, arg3, arg4)
-		else
-			arg1 = string.sub(arg1,7)
-			SELECTED_CHAT_FRAME:AddMessage("Translated text: "..arg1, 1, 1, 1)
-			SELECTED_CHAT_FRAME:AddMessage("Post-translated text: "..GF_TranslateMessage(arg1), 1, 1, 1)
-		end
-	end
-	local old_AddIgnore = AddIgnore;
-	function AddIgnore(name)
-		name = string.lower(name);
-		name = string.gsub(name, "^%l", string.upper);
-		GF_BlackList[name] = GF_DEFAULT_PLAYER_NOTE;
-		old_AddIgnore(name);
-	end
+	--local old_SendChatMessage = SendChatMessage;
+	--function SendChatMessage(arg1, arg2, arg3, arg4)
+	--	local channelname;
+	--	local istesting = string.find(string.sub(arg1,1,6), "testt ");
+	--	if arg4 then _,channelname = GetChannelName(arg4) end
+	--	if (GF_SavedVariables.automatictranslate and channelname and string.lower(channelname) == "china") or string.lower(string.sub(arg1,1,2)) == "t " or istesting then
+	--		arg1 = GF_TranslateSentMessage(arg1)
+	--	end
+	--	GF_SentMessage = arg1;
+	--	if not istesting then
+	--		old_SendChatMessage(arg1, arg2, arg3, arg4)
+	--	else
+	--		arg1 = string.sub(arg1,7)
+	--		SELECTED_CHAT_FRAME:AddMessage("Translated text: "..arg1, 1, 1, 1)
+	--		SELECTED_CHAT_FRAME:AddMessage("Post-translated text: "..GF_TranslateMessage(arg1), 1, 1, 1)
+	--	end
+	--end
+	--local old_AddIgnore = AddIgnore;
+	--function AddIgnore(name)
+	--	name = string.lower(name);
+	--	name = string.gsub(name, "^%l", string.upper);
+	--	GF_BlackList[name] = GF_DEFAULT_PLAYER_NOTE;
+	--	old_AddIgnore(name);
+	--end
 end
 
 function GF_SlashHandler()
@@ -499,14 +499,14 @@ local function GF_LoadSettings()
 	GF_AutoFilterLevelSlider:SetValue((GF_SavedVariables.autofilterlevelvar or 6));
 	GF_GroupNewTimeoutSlider:SetValue((GF_SavedVariables.showgroupsnewonlytime or 3));
 
-	GF_LFGAutoCheckButton:SetChecked(GF_SavedVariables.lfgauto);
-	getglobal(GF_SearchFrameDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchtext or "");
-	getglobal(GF_LFGDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchlfgtext or "");
-	getglobal(GF_LFGExtraEditBox:GetName()):SetText(GF_SavedVariables.searchlfgwhispertext or "");
-	GF_FrameLFGSizeSlider:SetValue((GF_SavedVariables.lfgsize or 5));
-	GF_FrameAnnounceTimerSlider:SetValue((GF_SavedVariables.announcetimer/60 or 2));
-	getglobal(GF_LFGWhoClassDropdown:GetName().."TextLabel"):SetText(GF_SavedVariables.lfgwhisperclass or "");
-	getglobal(GF_LFGWhoClassDropdown:GetName().."TextLabel"):SetPoint("LEFT", "GF_LFGWhoClassDropdown", "LEFT", 22, 3);
+	--GF_LFGAutoCheckButton:SetChecked(GF_SavedVariables.lfgauto);
+	--getglobal(GF_SearchFrameDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchtext or "");
+	--getglobal(GF_LFGDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchlfgtext or "");
+	--getglobal(GF_LFGExtraEditBox:GetName()):SetText(GF_SavedVariables.searchlfgwhispertext or "");
+	--GF_FrameLFGSizeSlider:SetValue((GF_SavedVariables.lfgsize or 5));
+	--GF_FrameAnnounceTimerSlider:SetValue((GF_SavedVariables.announcetimer/60 or 2));
+	--getglobal(GF_LFGWhoClassDropdown:GetName().."TextLabel"):SetText(GF_SavedVariables.lfgwhisperclass or "");
+	--getglobal(GF_LFGWhoClassDropdown:GetName().."TextLabel"):SetPoint("LEFT", "GF_LFGWhoClassDropdown", "LEFT", 22, 3);
 end
 
 function GF_OnEvent(event)
@@ -540,80 +540,80 @@ function GF_OnEvent(event)
 	elseif event == "CHAT_MSG_SYSTEM" and GF_AutoAnnounceTimer and string.find(arg1, GF_NOW_AFK) then
 		GF_ToggleAnnounce();
 		GF_Println(GF_AFK_ANNOUNCE_OFF);
-	elseif event == "CHAT_MSG_ADDON" and arg1 == "GF" and arg4 ~= UnitName("player") then
-		if string.sub(arg2,1,1) == "U" then
-			for w in string.gfind(arg2, "(%w+)") do
-				GF_SendAddonMessageNames[w] = true;
-			end
-			GF_SendAddonWhoNames = {}
-			for n,w in pairs(GF_WhoTable) do
-				if not GF_SendAddonWhoBuffer[w] and w[1] + 900 > time() then GF_SendAddonWhoNames[n] = true; end
-			end
-			GF_RequestTimer = 0;
-			GF_TimeSinceLastBroadcast = math.random(27);
-			GF_SendAddonRequestGroup = true;
-			GF_SendAddonRequestWho = true;
-		elseif string.sub(arg2,1,1) == "W" then
-			for sentname in gfind(arg2, ":(%w+)") do
-				if not GF_WhoTable[sentname] then GF_SendAddonRequestNames[sentname] = true end
-				GF_SendAddonWhoNames[sentname] = nil
-			end
-		elseif string.sub(arg2,1,1) == "R" then
-			for sentname in gfind(arg2, ":(%w+)") do
-				if GF_WhoTable[sentname] then GF_SendAddonWhoBuffer[sentname] = GF_WhoTable[sentname]; end
-				GF_SendAddonRequestNames[sentname] = nil
-			end
-		elseif string.sub(arg2,1,1) == ":" then
-			for sentclass,sentname,sentlevel,sentguild in gfind(arg2, ":(%d)([a-zA-Z]+)(%d+)([a-zA-Z%s<>]+)") do
-				if not GF_WhoTable[sentname] then
-					GF_WhoTable[sentname] = { time(), tonumber(sentlevel), GF_Classes[tonumber(sentclass)], string.gsub(sentguild,"[<>]", "") };
-				end
-				GF_SendAddonWhoNames[sentname] = nil;
-				GF_SendAddonRequestNames[sentname] = nil;
-				GF_SendAddonWhoBuffer[sentname] = nil;
-			end
-		elseif string.len(arg2) > 2 then
-			for code, sentlevel, sentguild, sentname, com in string.gfind(arg2, "(.+):(.+):(.+):(.+):(.+)") do
-				local tim = string.sub(code,1,4);
-				local cla = tonumber(string.sub(code,5,5));
-				local senttype = string.sub(code,6,6);
-				local sentchannel = tonumber(string.sub(code,7,7));
-				local sentilevel = tonumber(string.sub(code,8,9)) or 0;
-
-				if not tim or not cla or not sentlevel or not sentguild or not sentname or not senttype or not sentchannel or not sentilevel or not com then break end
-
-				if not GF_WhoTable[sentname] then GF_WhoTable[sentname] = { time(), tonumber(sentlevel), GF_Classes[cla], string.gsub(sentguild,"[<>]", "")}; end
-				local whodata = {class=GF_Classes[cla], level=tonumber(sentlevel), guild=sentguild };
-				for i = 1, getn(GF_MessageList) do
-					if GF_MessageList[i].op and GF_MessageList[i].op == sentname then
-						whodata = GF_MessageList[i].who;
-						table.remove(GF_MessageList, i);
-						break;
-					end
-				end
-				local entry = {};
-				entry.author = "";
-				entry.message = com;
-				entry.time = tim;
-				entry.op = sentname;
-				entry.who = whodata;
-				entry.type = senttype;
-				entry.ilevel = sentilevel
-				entry.channel = sentchannel;
-				if getn(GF_MessageList) > 0 then
-					for i = 1, getn(GF_MessageList) do
-						if entry.time > GF_MessageList[i].time then
-							table.insert(GF_MessageList, i, entry);
-							break;
-						end
-						if i == getn(GF_MessageList) then table.insert(GF_MessageList, i + 1, entry); end
-					end
-				else
-					table.insert(GF_MessageList, 1, entry);	
-				end
-				GF_SendAddonMessageBuffer[sentname] = nil;
-			end
-		end
+	--elseif event == "CHAT_MSG_ADDON" and arg1 == "GF" and arg4 ~= UnitName("player") then
+	--	if string.sub(arg2,1,1) == "U" then
+	--		for w in string.gfind(arg2, "(%w+)") do
+	--			GF_SendAddonMessageNames[w] = true;
+	--		end
+	--		GF_SendAddonWhoNames = {}
+	--		for n,w in pairs(GF_WhoTable) do
+	--			if not GF_SendAddonWhoBuffer[w] and w[1] + 900 > time() then GF_SendAddonWhoNames[n] = true; end
+	--		end
+	--		GF_RequestTimer = 0;
+	--		GF_TimeSinceLastBroadcast = math.random(27);
+	--		GF_SendAddonRequestGroup = true;
+	--		GF_SendAddonRequestWho = true;
+	--	elseif string.sub(arg2,1,1) == "W" then
+	--		for sentname in gfind(arg2, ":(%w+)") do
+	--			if not GF_WhoTable[sentname] then GF_SendAddonRequestNames[sentname] = true end
+	--			GF_SendAddonWhoNames[sentname] = nil
+	--		end
+	--	elseif string.sub(arg2,1,1) == "R" then
+	--		for sentname in gfind(arg2, ":(%w+)") do
+	--			if GF_WhoTable[sentname] then GF_SendAddonWhoBuffer[sentname] = GF_WhoTable[sentname]; end
+	--			GF_SendAddonRequestNames[sentname] = nil
+	--		end
+	--	elseif string.sub(arg2,1,1) == ":" then
+	--		for sentclass,sentname,sentlevel,sentguild in gfind(arg2, ":(%d)([a-zA-Z]+)(%d+)([a-zA-Z%s<>]+)") do
+	--			if not GF_WhoTable[sentname] then
+	--				GF_WhoTable[sentname] = { time(), tonumber(sentlevel), GF_Classes[tonumber(sentclass)], string.gsub(sentguild,"[<>]", "") };
+	--			end
+	--			GF_SendAddonWhoNames[sentname] = nil;
+	--			GF_SendAddonRequestNames[sentname] = nil;
+	--			GF_SendAddonWhoBuffer[sentname] = nil;
+	--		end
+	--	elseif string.len(arg2) > 2 then
+	--		for code, sentlevel, sentguild, sentname, com in string.gfind(arg2, "(.+):(.+):(.+):(.+):(.+)") do
+	--			local tim = string.sub(code,1,4);
+	--			local cla = tonumber(string.sub(code,5,5));
+	--			local senttype = string.sub(code,6,6);
+	--			local sentchannel = tonumber(string.sub(code,7,7));
+	--			local sentilevel = tonumber(string.sub(code,8,9)) or 0;
+	--
+	--			if not tim or not cla or not sentlevel or not sentguild or not sentname or not senttype or not sentchannel or not sentilevel or not com then break end
+	--
+	--			if not GF_WhoTable[sentname] then GF_WhoTable[sentname] = { time(), tonumber(sentlevel), GF_Classes[cla], string.gsub(sentguild,"[<>]", "")}; end
+	--			local whodata = {class=GF_Classes[cla], level=tonumber(sentlevel), guild=sentguild };
+	--			for i = 1, getn(GF_MessageList) do
+	--				if GF_MessageList[i].op and GF_MessageList[i].op == sentname then
+	--					whodata = GF_MessageList[i].who;
+	--					table.remove(GF_MessageList, i);
+	--					break;
+	--				end
+	--			end
+	--			local entry = {};
+	--			entry.author = "";
+	--			entry.message = com;
+	--			entry.time = tim;
+	--			entry.op = sentname;
+	--			entry.who = whodata;
+	--			entry.type = senttype;
+	--			entry.ilevel = sentilevel
+	--			entry.channel = sentchannel;
+	--			if getn(GF_MessageList) > 0 then
+	--				for i = 1, getn(GF_MessageList) do
+	--					if entry.time > GF_MessageList[i].time then
+	--						table.insert(GF_MessageList, i, entry);
+	--						break;
+	--					end
+	--					if i == getn(GF_MessageList) then table.insert(GF_MessageList, i + 1, entry); end
+	--				end
+	--			else
+	--				table.insert(GF_MessageList, 1, entry);
+	--			end
+	--			GF_SendAddonMessageBuffer[sentname] = nil;
+	--		end
+	--	end
 	elseif event == "WHO_LIST_UPDATE" then
 		GFAWM.onEventWhoListUpdated();
 	elseif event == "RAID_ROSTER_UPDATE" or event == "PARTY_LEADER_CHANGED" or event == "PARTY_MEMBERS_CHANGED" then
@@ -695,7 +695,7 @@ end
 
 function GF_ApplyFiltersToGroupList()
 	GF_SavedVariables.searchtext = GF_SearchFrameDescriptionEditBox:GetText()
-	GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText()
+	--GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText()
 	GF_FilteredResultsList = {};
 	for i=1, getn(GF_MessageList) do
 		local data = GF_MessageList[i];
