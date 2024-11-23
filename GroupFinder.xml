@@ -147,16 +147,17 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 		<Scripts>
 			<OnClick>			
 				if this:GetChecked() then
-					GF_AddRemoveSearch(string.sub(string.gsub(this:GetName(),"(%w)%d","%1"), 4), getglobal(this:GetName().."TextLabel"):GetText(), true)
+					GF_AddRemoveSearch(
+						string.gsub(string.gsub(this:GetName(), "^GF_", ""), "%d+$", ""),
+						getglobal(this:GetName() .. "TextLabel"):GetText(),
+						true
+					)
 				else
-					if getglobal(this:GetName().."TextLabel"):GetText() == "Clear" then
-						for i=1, GF_NumSearchButtons-1 do
-							local button = getglobal(string.gsub(this:GetName(),"(%a)%d","%1")..i)
-							button:SetChecked(false)
-						end
-						this:SetChecked(true)
-					end
-					GF_AddRemoveSearch(string.sub(string.gsub(this:GetName(),"(%w)%d","%1"), 4), getglobal(this:GetName().."TextLabel"):GetText(), nil)
+					GF_AddRemoveSearch(
+						string.gsub(string.gsub(this:GetName(), "^GF_", ""), "%d+$", ""),
+						getglobal(this:GetName() .. "TextLabel"):GetText(),
+						nil
+					)
 				end
 			</OnClick>
 		</Scripts>							
@@ -1516,37 +1517,37 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 							<Frame name="GF_NewItem18"  inherits="GF_NewItemTemplate"></Frame>	
 							<Frame name="GF_NewItem19"  inherits="GF_NewItemTemplate"></Frame>	
 							<Frame name="GF_NewItem20"  inherits="GF_NewItemTemplate"></Frame>	
-<!--							<EditBox name="GF_LFGDescriptionEditBox" letters="128" inherits="GF_AbstractEditBox">-->
-<!--								<Size>-->
-<!--									<AbsDimension x="365" y="25"/>-->
-<!--								</Size>-->
-<!--								<Anchors>-->
-<!--									<Anchor point="BOTTOMLEFT">-->
-<!--										<Offset>-->
-<!--											<AbsDimension x="75" y="0"/>-->
-<!--										</Offset>-->
-<!--									</Anchor>-->
-<!--								</Anchors>-->
-<!--								<Scripts>-->
-<!--									<OnLoad>-->
-<!--										this:SetTextInsets(4,0,0,0);-->
-<!--									</OnLoad>-->
-<!--									<OnEditFocusLost>-->
-<!--									</OnEditFocusLost>	-->
-<!--									<OnTabPressed>-->
-<!--										GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText();-->
-<!--										this:ClearFocus();-->
-<!--									</OnTabPressed>-->
-<!--									<OnEnterPressed>-->
-<!--										GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText();-->
-<!--										this:ClearFocus();-->
-<!--									</OnEnterPressed>													-->
-<!--									<OnEscapePressed>-->
-<!--										GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText();-->
-<!--										this:ClearFocus();-->
-<!--									</OnEscapePressed>-->
-<!--								</Scripts>				-->
-<!--							</EditBox>-->
+							<EditBox name="GF_LFGDescriptionEditBox" letters="128" inherits="GF_AbstractEditBox">
+								<Size>
+									<AbsDimension x="365" y="25"/>
+								</Size>
+								<Anchors>
+									<Anchor point="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="75" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										this:SetTextInsets(4,0,0,0);
+									</OnLoad>
+									<OnEditFocusLost>
+									</OnEditFocusLost>
+									<OnTabPressed>
+										GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText();
+										this:ClearFocus();
+									</OnTabPressed>
+									<OnEnterPressed>
+										GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText();
+										this:ClearFocus();
+									</OnEnterPressed>
+									<OnEscapePressed>
+										GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText();
+										this:ClearFocus();
+									</OnEscapePressed>
+								</Scripts>
+							</EditBox>
 <!--							<Slider name="GF_FrameLFGSizeSlider" inherits="OptionsSliderTemplate">-->
 <!--								<Size>-->
 <!--									<AbsDimension x="80" y="16"/>-->

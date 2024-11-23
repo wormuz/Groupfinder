@@ -501,7 +501,7 @@ local function GF_LoadSettings()
 
 	--GF_LFGAutoCheckButton:SetChecked(GF_SavedVariables.lfgauto);
 	--getglobal(GF_SearchFrameDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchtext or "");
-	--getglobal(GF_LFGDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchlfgtext or "");
+	getglobal(GF_LFGDescriptionEditBox:GetName()):SetText(GF_SavedVariables.searchlfgtext or "");
 	--getglobal(GF_LFGExtraEditBox:GetName()):SetText(GF_SavedVariables.searchlfgwhispertext or "");
 	--GF_FrameLFGSizeSlider:SetValue((GF_SavedVariables.lfgsize or 5));
 	--GF_FrameAnnounceTimerSlider:SetValue((GF_SavedVariables.announcetimer/60 or 2));
@@ -695,7 +695,7 @@ end
 
 function GF_ApplyFiltersToGroupList()
 	GF_SavedVariables.searchtext = GF_SearchFrameDescriptionEditBox:GetText()
-	--GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText()
+	GF_SavedVariables.searchlfgtext = GF_LFGDescriptionEditBox:GetText()
 	GF_FilteredResultsList = {};
 	for i=1, getn(GF_MessageList) do
 		local data = GF_MessageList[i];
