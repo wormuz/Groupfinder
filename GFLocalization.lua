@@ -239,9 +239,9 @@ GF_TRIGGER_LIST = {
 	},
 	
 	["IGNORE"] = { "channel", "lol", "lmao", "lmfao", "rofl", "wts", "wtb", "stfu", "ignore", "noob", "website", "http",
-				"nub", "n00b", "recruit", "trogdoor", "raid times", "dedicated", "lockbox", "lfw", "cod"},
+				"nub", "n00b", "recruit", "trogdoor", "raid times", "dedicated", "lockbox", "lfw", "cod", "DR%:p", "MR%:p", "chatiteminfo", "pwb", "atlas", "auxdata"},
 
-	["SPAM"] = { "l f m", "h e a l", "n o s t", "please come to web", "c o m", "n 0 s t", "level service", "c o m", },
+	["SPAM"] = { "l f m", "h e a l", "n o s t", "please come to web", "c o m", "n 0 s t", "level service", "c o m" },
 	
 	["POLITICS"] = { "jews", "hitler", "stalin", "kike", "nazi", "supremacist", "racism", "gas chamber", "pedo", "biden", "trump", "pelosi", "semiti", "tranny", "trannies",
 						"6 million", "gorillion", "republican", "democrat", "politic", "bankers", "apartheid", "holocaust", "holohoax", "bigot", "schizo", "jewish",

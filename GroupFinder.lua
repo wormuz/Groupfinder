@@ -98,7 +98,7 @@ function GF_OnLoad()
 	SlashCmdList["GroupFinderCOMMAND"] = GF_SlashHandler; --Register Slash Command
 	SLASH_GroupFinderCOMMAND1 = "/gf";
 	
-	this:RegisterEvent("CHAT_MSG_SYSTEM"); --Register Event Listeners
+	this:RegisterEvent("CHAT_MSG_CHANNEL"); --Register Event Listeners
 	--this:RegisterEvent("CHAT_MSG_ADDON");
 	--this:RegisterEvent("PARTY_LEADER_CHANGED");
 	--this:RegisterEvent("PARTY_MEMBERS_CHANGED");
@@ -110,7 +110,10 @@ function GF_OnLoad()
 	
 	local old_ChatFrame_OnEvent = ChatFrame_OnEvent;
 	function ChatFrame_OnEvent(event)
-		if not arg1 or arg1 == GF_SentMessage or not arg2 or arg2 == "" or arg2 == UnitName("player") or not arg9 then
+		if arg4 and (string.find(string.lower(arg4), "ttrp")
+			or string.find(string.lower(arg4), "lft")) then
+			-- addon channels
+		elseif not arg1 or arg1 == GF_SentMessage or not arg2 or arg2 == "" or arg2 == UnitName("player") or not arg9 then
 			if GF_SavedVariables.showoriginal and arg1 and arg1 ~= "" and arg1 == GF_SentMessage and string.find(arg1, "([\227\228\229\230\231\232\233\234\235\236\237])") then
 				SELECTED_CHAT_FRAME:AddMessage("Translated text: "..GF_TranslateMessage(arg1), 1, 1, 1)
 			end 

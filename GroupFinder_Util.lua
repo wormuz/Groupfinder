@@ -135,11 +135,10 @@ GF_Util.rateResults = function (msg, fLevel)
 	local gtype = "N"
 	local instancelevel;
 	local counter = 0;
-	if filterLevel > 1 then
-		for _,word in GF_TRIGGER_LIST.IGNORE do
-			if string.find(msgnew, word) then return 0, gtype, 0 end
-		end
+	for _,word in GF_TRIGGER_LIST.IGNORE do
+		if string.find(msgnew, word) then return 0, gtype, 0 end
 	end
+	print(msgnew)
 	for _,word in GF_TRIGGER_LIST.LFM do
 		if string.find(msgnew, word) then
 			lfx_score = 1; 
