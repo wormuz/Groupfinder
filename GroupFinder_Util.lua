@@ -138,7 +138,6 @@ GF_Util.rateResults = function (msg, fLevel)
 	for _,word in GF_TRIGGER_LIST.IGNORE do
 		if string.find(msgnew, word) then return 0, gtype, 0 end
 	end
-	print(msgnew)
 	for _,word in GF_TRIGGER_LIST.LFM do
 		if string.find(msgnew, word) then
 			lfx_score = 1; 
