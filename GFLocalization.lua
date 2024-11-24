@@ -13,7 +13,7 @@ GF_SHAMAN				= "Shaman";
 
 -- Main window common buttons and texts
 GF_MAIN_HEADER	 		= "Group Finder"; -- Main window title
-GF_FIND_PLAYERS_AND_GROUPS	= "Find players and groups"; -- Label for Groupfinder tab
+GF_FIND_PLAYERS_AND_GROUPS	= "LFG, Ctrl + LButton for request"; -- Label for Groupfinder tab
 GF_MORE_FEATURES		= "More"; -- Label for "More" frame(Settings/Log/Blacklist)
 GF_SHOW_GROUPS_IN		= "Show groups in"
 GF_CHAT					= "Chat"

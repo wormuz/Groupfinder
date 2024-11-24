@@ -865,6 +865,15 @@ function GF_ListItem_OnMouseUp() -- When you click a name in the list.
 			end
 			return;
 		end
+
+		-- Handle LeftButton click with Ctrl pressed
+		if (arg1 == "LeftButton" and IsControlKeyDown()) then
+			local name = raid.op or raid.author;
+			if name and name ~= UnitName("player") then
+				SendChatMessage("++", "WHISPER", nil, name); -- Send "++" to the player
+			end
+			return;
+		end
 	end
 	GF_UpdateResults();
 end

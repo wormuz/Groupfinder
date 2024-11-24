@@ -1516,8 +1516,8 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 							<Frame name="GF_NewItem17"  inherits="GF_NewItemTemplate"></Frame>	
 							<Frame name="GF_NewItem18"  inherits="GF_NewItemTemplate"></Frame>	
 							<Frame name="GF_NewItem19"  inherits="GF_NewItemTemplate"></Frame>	
-							<Frame name="GF_NewItem20"  inherits="GF_NewItemTemplate"></Frame>	
-							<EditBox name="GF_LFGDescriptionEditBox" letters="128" inherits="GF_AbstractEditBox">
+							<Frame name="GF_NewItem20"  inherits="GF_NewItemTemplate"></Frame>
+							<EditBox name="GF_LFGDescriptionEditBox" letters="128" inherits="GF_AbstractEditBox" hidden="true">
 								<Size>
 									<AbsDimension x="365" y="25"/>
 								</Size>
