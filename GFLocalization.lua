@@ -353,7 +353,7 @@ GF_BUTTONS_LIST = {
 		--[27] = { "40-man Raids", 58, 60, "mc-", "molten+core", "rag-","ragnaros", "blackwing", "bwl", "nef-", "nefari", "aq40", "cthun", "aq+40", "naxx", "ony-", "onyxia", "qiraj", },
 		--[28] = { "20-man Raids", 58, 60, "zg-", "zul+g", "gurub", "hakkar", "aq20", "ossi", },
 		--[29] = { "PvP", 18, 60, "premade", "av-", "ab-",  "wsg-", "alterac+valley", "arathi+basin", "warsong+gulch", },
-		--[30] = { GF_CLEAR, 1, 60, "", },
+		[30] = { GF_CLEAR, 1, 60, "", },
 	},
 	["LFGWhoClass"] = {
 		[1] = { GF_PRIEST, 1, 60, },
