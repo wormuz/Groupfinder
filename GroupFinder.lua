@@ -23,7 +23,7 @@ GF_SavedVariables = {
 	playsounds					= false,
 	autofilter					= false,
 	autofilterlevelvar			= 6,
-	showtranslate				= true,
+	showtranslate				= false,
 	showdungeons				= true,
 	showraids					= true,
 	showquests					= true,
@@ -473,10 +473,8 @@ local function GF_LoadSettings()
 
 	GF_ShowChatCheckButton:SetChecked(GF_SavedVariables.showchattexts);
 	GF_ShowTradesCheckButton:SetChecked(GF_SavedVariables.showtradestexts);
-	GF_TranslateCheckButton:SetChecked(GF_SavedVariables.translate);
 
 	GF_AutoFilterCheckButton:SetChecked(GF_SavedVariables.autofilter);
-	GF_SearchFrameShowTranslateCheckButton:SetChecked(GF_SavedVariables.showtranslate);
 	GF_SearchFrameShowDungeonCheckButton:SetChecked(GF_SavedVariables.showdungeons);
 	GF_SearchFrameShowRaidCheckButton:SetChecked(GF_SavedVariables.showraids);
 	GF_SearchFrameShowQuestCheckButton:SetChecked(GF_SavedVariables.showquests);
