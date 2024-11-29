@@ -1316,9 +1316,9 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 							</CheckButton>
 							<CheckButton name="GF_SearchFrameShowRaidCheckButton" inherits="GF_AbstractLabelCheckButton">
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="GF_SearchFrameShowTranslateCheckButton" >
+									<Anchor point="TOPLEFT" relativeTo="GF_SearchFrameShowDungeonCheckButton" >
 										<Offset>
-											<AbsDimension x="86" y="0"/>
+											<AbsDimension x="0" y="-15"/>
 										</Offset>
 									</Anchor>
 								</Anchors>
